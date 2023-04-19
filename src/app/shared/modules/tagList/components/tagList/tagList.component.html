@@ -1,0 +1,7 @@
+<ul class="tag-list">
+  <li *ngFor="let tag of tagsProps" class="tag-default tag-pill tag-outline">
+    <a [routerLink]="['/tags', tag]">
+      {{ tag }}
+    </a>
+  </li>
+</ul>
