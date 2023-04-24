@@ -1,4 +1,11 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core'
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core'
 import { Store, select } from '@ngrx/store'
 import { Observable, Subscription } from 'rxjs'
 import { ActivatedRoute, Params, Router } from '@angular/router'
@@ -19,7 +26,7 @@ import { stringifyUrl } from 'query-string/base'
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.scss'],
 })
-export class FeedComponent implements OnInit, OnDestroy {
+export class FeedComponent implements OnInit, OnDestroy, OnChanges {
   @Input('apiUrl') apiUrlProps: string
 
   isLoading$: Observable<boolean>
@@ -39,26 +46,36 @@ export class FeedComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initializeValues()
     this.initializeListeners()
+    console.log('initialized Feed')
   }
 
   ngOnDestroy(): void {
     this.queryParamsSubscription.unsubscribe()
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    const isApiUrlChanged =
+      !changes['apiUrlProps'].isFirstChange() &&
+      changes['apiUrlProps'].currentValue !==
+        changes['apiUrlProps'].previousValue
+    if (isApiUrlChanged) {
+      this.fetchFeed()
+    }
+  }
+
   initializeListeners(): void {
     this.queryParamsSubscription = this.route.queryParams.subscribe(
       (params: Params) => {
         this.currentPage = Number(params['page'] || '1')
-        console.log('currentPage', this.currentPage)
         this.fetchFeed()
       }
     )
   } // stock
 
   initializeValues(): void {
-    this.isLoading$ = this.store.pipe(select(isLoadingSelector))
-    this.error$ = this.store.pipe(select(errorSelector))
     this.feed$ = this.store.pipe(select(feedSelector))
+    this.error$ = this.store.pipe(select(errorSelector))
+    this.isLoading$ = this.store.pipe(select(isLoadingSelector))
     this.baseUrl = this.router.url.split('?')[0]
   }
 

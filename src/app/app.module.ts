@@ -6,14 +6,17 @@ import { StoreModule } from '@ngrx/store'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { StoreRouterConnectingModule, routerReducer } from '@ngrx/router-store'
 
-import { AppRoutingModule } from 'src/app/app-routing.module'
-import { AppComponent } from 'src/app/app.component'
-import { AuthModule } from 'src/app/auth/auth.module'
+import { AppRoutingModule } from '@/app-routing.module'
+import { AppComponent } from '@/app.component'
+import { AuthModule } from '@/auth/auth.module'
 import { environment } from 'src/environments/environment'
-import { TopBarModule } from 'src/app/shared/modules/topBar/topBar.module'
-import { PersistanceService } from 'src/app/shared/services/persistance.service'
-import { AuthInterceptor } from 'src/app/shared/services/authinterceptor.service'
-import { GlobalFeedModule } from 'src/app/globalFeed/globalFeed.module'
+import { GlobalFeedModule } from '@/globalFeed/globalFeed.module'
+import { YourFeedModule } from '@/yourFeed/yourFeed.module'
+import { TagFeedModule } from '@/tagFeed/tagFeed.module'
+import { ArticleModule } from '@/article/article.module'
+import { TopBarModule } from '@shared/modules/topBar/topBar.module'
+import { AuthInterceptor } from '@shared/services/authinterceptor.service'
+import { PersistanceService } from '@shared/services/persistance.service'
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,11 +29,14 @@ import { GlobalFeedModule } from 'src/app/globalFeed/globalFeed.module'
     StoreModule.forRoot({ router: routerReducer }),
     StoreRouterConnectingModule.forRoot(),
     StoreDevtoolsModule.instrument({
-      maxAge: 25, // Retains last 25 states
+      maxAge: 25,
       logOnly: environment.production,
     }),
     TopBarModule,
     GlobalFeedModule,
+    YourFeedModule,
+    TagFeedModule,
+    ArticleModule,
   ],
   providers: [
     PersistanceService,

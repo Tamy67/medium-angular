@@ -1,4 +1,5 @@
 import { Component } from '@angular/core'
+import { Observable, Subscribable } from 'rxjs'
 
 @Component({
   selector: 'mc-global-feed',
